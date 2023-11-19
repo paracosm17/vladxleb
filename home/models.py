@@ -21,7 +21,7 @@ from django.contrib.auth import get_user_model
 class HomePage(Page):
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-        context['routes'] = RoutePage.objects.filter(driver=request.user)[::-1]
+        context['routes'] = RoutePage.objects.filter(driver=request.user.id)[::-1]
         return context
     
     class Meta:
