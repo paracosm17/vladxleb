@@ -1,0 +1,61 @@
+<style>
+    .expedition-block {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+
+.expedition-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.expedition-title {
+    margin: 0;
+    color: #333;
+    font-size: 1.4em;
+}
+
+.gate-number {
+    font-size: 1.2em;
+    color: #555;
+    font-weight: bold;
+}
+
+.expedition-description {
+    color: #666;
+    line-height: 1.6;
+}
+
+.complete-expedition {
+                        background-color: #4CAF50; /* Зеленый цвет фона */
+                        border: none;
+                        color: white;
+                        padding: 10px 20px;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        font-size: 16px;
+                        margin: 4px 2px;
+                        cursor: pointer;
+                        border-radius: 8px;
+                        transition: background-color 0.3s ease;
+                        }
+
+.complete-expedition :hover {
+background-color: #45a049; /* Немного темнее зеленого при наведении */
+}
+</style>
+<div class="expedition-block">
+    <div class="expedition-header">
+        <h2 class="expedition-title">Expedition {{ self.name }} {% if not self.completed%}НЕЗАВЕРШЁННАЯ{% endif %}</h2>
+        <div class="gate-number">Gate: {{ self.gate }}</div>
+    </div>
+    <div class="expedition-description">{{ self.date }}</div>
+    <div class="expedition-description">{{ self.description }}</div>
+    {% if not self.completed%}<button class="complete-expedition" data-expedition-name="{{ self.name }}">Завершить экспедицию</button>{% endif %}
+</div>

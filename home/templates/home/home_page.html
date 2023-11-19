@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/welcome_page.css' %}">
+{% endblock extra_css %}
+
+{% block content %}
+        {% if request.user.is_authenticated %}
+                <style>
+                .route-finished {
+                border: 1px solid #ddd;
+                padding: 15px;
+                margin-bottom: 20px;
+                }
+                .route{
+                border: 1px solid #ddd;
+                background-color: #c6ebb5;
+                padding: 15px;
+                margin-bottom: 20px;
+                }
+                .finish-route {
+                        background-color: #4CAF50; /* Зеленый цвет фона */
+                        border: none;
+                        color: white;
+                        padding: 10px 20px;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        font-size: 16px;
+                        margin: 4px 2px;
+                        cursor: pointer;
+                        border-radius: 8px;
+                        transition: background-color 0.3s ease;
+                        }
+
+                .finish-route:hover {
+                background-color: #45a049; /* Немного темнее зеленого при наведении */
+                }
+                </style>
+                <h1>Текущие Рейсы</h1>
+                {% for route in routes %}
+                        {% if not route.finished %}
+                                <div class="route">
+                                <h2>{{ route.title }}</h2>
+                                {% for expedition in route.expeditions %}
+                                        {{ expedition }}
+                                        
+                                {% endfor %}
+                                <button class="finish-route" data-route-id="{{ route.id }}">Завершить рейс</button>
+                                </div>
+                        {% else %}
+                                <div class="route-finished ">
+                                <h2>{{ route.title }}</h2>
+                                {% for expedition in route.expeditions %}
+                                        {{ expedition }}
+                                {% endfor %}
+                                </div>
+                        {% endif %}
+                        <script>
+                                document.querySelectorAll('.complete-expedition').forEach(function(button) {
+                                    button.addEventListener('click', function() {
+                                        const expeditionName = this.getAttribute('data-expedition-name');
+                                        fetch(`/complete-expedition/{{ route.id }}/${expeditionName}/`, { method: 'POST' })
+                                            .then(response => {
+                                                if (response.ok) {
+                                                    alert('Экспедиция завершена');
+                                                } else {
+                                                    alert('Произошла ошибка');
+                                                }
+                                            });
+                                    });
+                                });
+                        </script>
+                        <script>
+                                document.querySelectorAll('.finish-route').forEach(function(button) {
+                                    button.addEventListener('click', function() {
+                                        const routeId = this.getAttribute('data-route-id');
+                                        fetch(`/finish-route/${routeId}/`, { method: 'POST' })
+                                            .then(response => {
+                                                if (response.ok) {
+                                                    alert('Рейс завершен');
+                                                } else {
+                                                    alert('Произошла ошибка');
+                                                }
+                                            });
+                                    });
+                                });
+                        </script>
+                {% endfor %}
+        {% else %}
+                <h1>Not logged in</h1>
+                <a class="btn" href="{% url 'account_login' %}">Login</a>
+        {% endif %}
+{% endblock content %}
